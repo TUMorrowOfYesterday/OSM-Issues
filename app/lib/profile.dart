@@ -1,3 +1,4 @@
+import 'package:app/Challenge/currentchallenge.dart';
 import 'package:app/placeholderpage.dart';
 import 'package:app/main.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,9 +53,37 @@ class _ProfileState extends State<Profile> {
                               width: 200,
                               image: AssetImage('assets/avatar/sloth.jpg'))),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 30.0,
+                          child: const Icon(
+                            Icons.person,
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 18.0),
+                          child: Text(
+                            'My Avatar',
+                            style: TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 20),
                     InkWell(
-                      onTap: () => {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => CurrentChallegene()),
+                      ),
                       child: Container(
                         height: MediaQuery.of(context).size.width * 0.15,
                         width: MediaQuery.of(context).size.width * 0.55,
@@ -73,7 +102,8 @@ class _ProfileState extends State<Profile> {
                               children: [
                                 Container(
                                   width: 12.0,
-                                  child: const Icon(Icons.person),
+                                  child: const Icon(Icons.task,
+                                      color: Colors.black),
                                 ),
                                 const SizedBox(
                                   width: 15,
@@ -81,11 +111,11 @@ class _ProfileState extends State<Profile> {
                                 const Padding(
                                   padding: EdgeInsets.symmetric(vertical: 18.0),
                                   child: Text(
-                                    'My Avatar',
+                                    'My Challenges',
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.white),
+                                        color: Colors.black),
                                   ),
                                 ),
                               ],
