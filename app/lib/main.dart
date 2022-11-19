@@ -1,6 +1,8 @@
 import 'package:app/homepage.dart';
+import 'package:app/login_process/startpage.dart';
 import 'package:app/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +16,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late String? uid;
+  late Future getUid;
+
+  _MyAppState();
+
+  @override
+  void initState() {
+    getUid = Future<void>(() async {
+      final prefs = await SharedPreferences.getInstance();
+      uid = prefs.getString("uid");
+    });
+    super.initState();
+  }
+
+  final prefs = SharedPreferences.getInstance();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -31,7 +48,8 @@ class _MyAppState extends State<MyApp> {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      // uid == null
+      home: (1 == 1) ? StartPage() : Homepage(),
     );
   }
 }
@@ -63,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
         body: IndexedStack(
           children: <Widget>[
