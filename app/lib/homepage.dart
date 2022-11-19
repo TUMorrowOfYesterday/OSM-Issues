@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -30,22 +32,19 @@ class _HomepageState extends State<Homepage> {
   StreamSubscription<Position>? positionStream;
   late Timer timer;
 
-  static Map<int, Tuple2<double, double>> mockIssues = {
-    0: Tuple2(13.0, 14.2),
-    1: Tuple2(48.0, 11.2),
-    2: Tuple2(20.0, -9.2),
-    3: Tuple2(64.0, -45.2)
-  };
+  List? openIssues;
 
   List<Marker> mapToMarker() {
     List<Marker> markers = [];
-    mockIssues.forEach((key, value) {
+    if (openIssues == null) return markers;
+
+    for (var issue in openIssues!) {
       markers.add(Marker(
-          point: LatLng(value.item1, value.item2),
+          point: LatLng(issue[2], issue[1]),
           width: 80,
           height: 80,
           builder: (context) => Icon(Icons.location_on)));
-    });
+    }
 
     return markers;
   }
@@ -100,9 +99,14 @@ class _HomepageState extends State<Homepage> {
   //Fetch issue
   //update avatar
   //fetch others position
-  void updateServer() {
-    // String serverUrl;
-    // http.get(Uri.parse("http://"+serverUrl+"/"))
+  void updateServer() async {
+    String serverUrl = "131.159.196.209:5000";
+    var response =
+        await http.get(Uri.parse("http://" + serverUrl + "/get_openIssues"));
+    if (response.statusCode == 200)
+      setState(() {
+        openIssues = jsonDecode(response.body);
+      });
   }
 
   @override
