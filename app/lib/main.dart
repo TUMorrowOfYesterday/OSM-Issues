@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       // uid == null
-      home: (1 == 1) ? StartPage() : Homepage(),
+      home: (1 != 1) ? StartPage() : MyHomePage(),
     );
   }
 }

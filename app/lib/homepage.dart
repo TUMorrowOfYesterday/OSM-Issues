@@ -57,6 +57,8 @@ class _HomepageState extends State<Homepage> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
+
+    return true;
   }
 
   /// Determine the current position of the device.
@@ -75,6 +77,7 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     ensureLocationPermission().then((value) {
+      //TODO: check value for whether it was successful or not
       positionStream = Geolocator.getPositionStream(
           locationSettings: LocationSettings(
         accuracy: LocationAccuracy.high,
