@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -8,10 +10,13 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'package:tuple/tuple.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -25,6 +30,24 @@ class _HomepageState extends State<Homepage> {
 
   // automatic location updates
   StreamSubscription<Position>? positionStream;
+  late Timer timer;
+
+  List? openIssues;
+
+  List<Marker> mapToMarker() {
+    List<Marker> markers = [];
+    if (openIssues == null) return markers;
+
+    for (var issue in openIssues!) {
+      markers.add(Marker(
+          point: LatLng(issue[2], issue[1]),
+          width: 80,
+          height: 80,
+          builder: (context) => Icon(Icons.location_on)));
+    }
+
+    return markers;
+  }
 
   ensureLocationPermission() async {
     bool serviceEnabled;
@@ -57,6 +80,8 @@ class _HomepageState extends State<Homepage> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
+
+    return true;
   }
 
   /// Determine the current position of the device.
@@ -71,10 +96,24 @@ class _HomepageState extends State<Homepage> {
     return await Geolocator.getCurrentPosition();
   }
 
+  //Fetch issue
+  //update avatar
+  //fetch others position
+  void updateServer() async {
+    String serverUrl = "131.159.196.209:5000";
+    var response =
+        await http.get(Uri.parse("http://" + serverUrl + "/get_openIssues"));
+    if (response.statusCode == 200)
+      setState(() {
+        openIssues = jsonDecode(response.body);
+      });
+  }
+
   @override
   void initState() {
     super.initState();
     ensureLocationPermission().then((value) {
+      //TODO: check value for whether it was successful or not
       positionStream = Geolocator.getPositionStream(
           locationSettings: LocationSettings(
         accuracy: LocationAccuracy.high,
@@ -87,6 +126,10 @@ class _HomepageState extends State<Homepage> {
         }
       });
     });
+
+    // periodic updater
+    timer = Timer.periodic(Duration(seconds: 1), ((timer) => updateServer()));
+    super.initState();
   }
 
   @override
@@ -118,21 +161,29 @@ class _HomepageState extends State<Homepage> {
             // Layer where we can put our custom markers (see https://docs.fleaflet.dev/usage/layers/marker-layer)
             MarkerLayer(
               markers: [
-                Marker(
-                  //current position
-                  point: userPosition == null
-                      ? LatLng(30, 40)
-                      : LatLng(userPosition!.latitude, userPosition!.longitude),
-                  width: 80,
-                  height: 80,
-                  builder: (context) => Icon(Icons.navigation),
-                ),
-              ],
+                    Marker(
+                      //current position
+                      point: userPosition == null
+                          ? LatLng(30, 40)
+                          : LatLng(
+                              userPosition!.latitude, userPosition!.longitude),
+                      width: 80,
+                      height: 80,
+                      builder: (context) => Icon(Icons.navigation),
+                    ),
+                  ] +
+                  mapToMarker(),
               rotate: true, //counter rotate to keep marker upright
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 }
