@@ -1,9 +1,6 @@
+import 'package:app/homepage.dart';
 import 'package:app/profile.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_map/flutter_map.dart'; // Suitable for most situations
-import 'package:flutter_map/plugin_api.dart';
-import 'package:latlong2/latlong.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,19 +55,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
 
-  var pagebuilders = [];
-
-  @override
-  void initState() {
-    pagebuilders = [
-      buildMapView,
-      () => Center(child: Text('Leaderboard')), // Put your pages in here
-      () => Profile(),
-    ];
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -80,7 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        body: pagebuilders[index](),
+        body: IndexedStack(
+          children: <Widget>[
+            Homepage(),
+            Center(child: Text('Leaderboard')),
+            Profile(),
+          ],
+          index: index,
+        ),
         bottomNavigationBar: NavigationBar(
           height: 60,
           selectedIndex: index,
@@ -94,43 +85,5 @@ class _MyHomePageState extends State<MyHomePage> {
             NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
           ],
         ));
-  }
-
-  Widget buildMapView() {
-    return Center(
-      child: FlutterMap(
-        options: MapOptions(
-          center: LatLng(51.509364, -0.128928),
-          zoom: 9.2,
-        ),
-        nonRotatedChildren: [
-          AttributionWidget.defaultWidget(
-            source: 'OpenStreetMap',
-            onSourceTapped: () => print('OpenStreetMap attribution tapped'),
-          ),
-          // UI OVERLAY BUTTONS ETC HERE
-          Expanded(
-              child: Center(child: Text("HELLO WORLDl\nasdjfladsjflksafjalks")))
-        ],
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
-          ),
-          // Layer where we can put our custom markers (see https://docs.fleaflet.dev/usage/layers/marker-layer)
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: LatLng(30, 40),
-                width: 80,
-                height: 80,
-                builder: (context) => FlutterLogo(),
-              ),
-            ],
-            rotate: true, //counter rotate to keep marker upright
-          ),
-        ],
-      ),
-    );
   }
 }
