@@ -44,6 +44,8 @@ con = sqlite3.connect("app.db", check_same_thread=False)
 
 cur = con.cursor()
 
+cur.execute("create index if not exists idx on users(userId, score, avatarId)")
+
 # read csv into rows list
 with open('issues.csv', 'r', encoding='utf-8') as csv_file:
     reader = csv.reader(csv_file)

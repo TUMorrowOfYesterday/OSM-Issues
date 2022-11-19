@@ -47,7 +47,7 @@ def register():
 @app.route("/leaderboard", methods=['GET'])
 def leaderboard():
     cur = con.cursor()
-    res = cur.execute("SELECT userId, score FROM users").fetchall()
+    res = cur.execute("SELECT userId, score, avatarId FROM users ORDER BY score DESC").fetchall()
     cur.close()
     return jsonify(res)
 
