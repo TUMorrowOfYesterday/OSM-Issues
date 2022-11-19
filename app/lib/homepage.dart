@@ -8,10 +8,13 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'package:tuple/tuple.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -25,6 +28,27 @@ class _HomepageState extends State<Homepage> {
 
   // automatic location updates
   StreamSubscription<Position>? positionStream;
+  late Timer timer;
+
+  static Map<int, Tuple2<double, double>> mockIssues = {
+    0: Tuple2(13.0, 14.2),
+    1: Tuple2(48.0, 11.2),
+    2: Tuple2(20.0, -9.2),
+    3: Tuple2(64.0, -45.2)
+  };
+
+  List<Marker> mapToMarker() {
+    List<Marker> markers = [];
+    mockIssues.forEach((key, value) {
+      markers.add(Marker(
+          point: LatLng(value.item1, value.item2),
+          width: 80,
+          height: 80,
+          builder: (context) => Icon(Icons.location_on)));
+    });
+
+    return markers;
+  }
 
   ensureLocationPermission() async {
     bool serviceEnabled;
@@ -73,6 +97,14 @@ class _HomepageState extends State<Homepage> {
     return await Geolocator.getCurrentPosition();
   }
 
+  //Fetch issue
+  //update avatar
+  //fetch others position
+  void updateServer() {
+    // String serverUrl;
+    // http.get(Uri.parse("http://"+serverUrl+"/"))
+  }
+
   @override
   void initState() {
     super.initState();
@@ -90,6 +122,10 @@ class _HomepageState extends State<Homepage> {
         }
       });
     });
+
+    // periodic updater
+    timer = Timer.periodic(Duration(seconds: 1), ((timer) => updateServer()));
+    super.initState();
   }
 
   @override
@@ -121,21 +157,29 @@ class _HomepageState extends State<Homepage> {
             // Layer where we can put our custom markers (see https://docs.fleaflet.dev/usage/layers/marker-layer)
             MarkerLayer(
               markers: [
-                Marker(
-                  //current position
-                  point: userPosition == null
-                      ? LatLng(30, 40)
-                      : LatLng(userPosition!.latitude, userPosition!.longitude),
-                  width: 80,
-                  height: 80,
-                  builder: (context) => Icon(Icons.navigation),
-                ),
-              ],
+                    Marker(
+                      //current position
+                      point: userPosition == null
+                          ? LatLng(30, 40)
+                          : LatLng(
+                              userPosition!.latitude, userPosition!.longitude),
+                      width: 80,
+                      height: 80,
+                      builder: (context) => Icon(Icons.navigation),
+                    ),
+                  ] +
+                  mapToMarker(),
               rotate: true, //counter rotate to keep marker upright
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 }
