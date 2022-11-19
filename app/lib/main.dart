@@ -60,7 +60,25 @@ class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
 
   final pages = [
-    Center(child: Text('Homepage')), // Put your pages in here
+    Center(
+        child: FlutterMap(
+      options: MapOptions(
+        center: LatLng(51.509364, -0.128928),
+        zoom: 9.2,
+      ),
+      nonRotatedChildren: [
+        AttributionWidget.defaultWidget(
+          source: 'OpenStreetMap contributors',
+          onSourceTapped: null,
+        ),
+      ],
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.app',
+        ),
+      ],
+    )), // Put your pages in here
     Center(child: Text('Leaderboard')), // Put your pages in here
     Center(child: Text('Profile')) // Put your pages in here
   ];
