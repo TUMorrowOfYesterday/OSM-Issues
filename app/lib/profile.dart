@@ -1,4 +1,4 @@
-import 'package:app/Placeholderpage.dart';
+import 'package:app/placeholderpage.dart';
 import 'package:app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +25,16 @@ class _ProfileState extends State<Profile> {
         body: SafeArea(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Text('Profile'),
-              )
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: const [
+          //     Padding(
+          //       padding: EdgeInsets.only(top: 10),
+          //       child: Text('Profile'),
+          //     )
+          //   ],
+          // ),
           Expanded(
             child: SingleChildScrollView(
               // Bounce Bounce
@@ -48,18 +48,24 @@ class _ProfileState extends State<Profile> {
                   padding: const EdgeInsets.only(top: 20),
                   child: Column(
                     children: [
-                      const Center(child: Icon(Icons.person)),
+                      const Center(
+                        child: ClipOval(
+                            child: Image(
+                                width: 200,
+                                image: AssetImage(
+                                    'assets/avatar/sleepingsloth.jpg'))),
+                      ),
                       const SizedBox(height: 50),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.only(top: 20),
                         child: Container(
-                          height: MediaQuery.of(context).size.width * 0.2,
+                          height: MediaQuery.of(context).size.width * 0.15,
                           width: MediaQuery.of(context).size.width * 0.75,
                           decoration: const BoxDecoration(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(15.0)),
+                                BorderRadius.all(Radius.circular(10.0)),
                             gradient: LinearGradient(
-                              colors: [Color(0xFFC030E6), Color(0xFF8865F7)],
+                              colors: [Color(0xFF18E299), Color(0xFF0FFAE6)],
                               begin: Alignment(-1.0, -2.0),
                               end: Alignment(1.0, 2.0),
                             ),
@@ -80,7 +86,7 @@ class _ProfileState extends State<Profile> {
                                     padding:
                                         EdgeInsets.symmetric(vertical: 18.0),
                                     child: Text(
-                                      'Premium',
+                                      'Ava',
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
