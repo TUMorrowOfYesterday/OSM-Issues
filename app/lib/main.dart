@@ -1,9 +1,6 @@
+import 'package:app/homepage.dart';
 import 'package:app/profile.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_map/flutter_map.dart'; // Suitable for most situations
-import 'package:flutter_map/plugin_api.dart';
-import 'package:latlong2/latlong.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,30 +55,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
 
-  final pages = [
-    Center(
-        child: FlutterMap(
-      options: MapOptions(
-        center: LatLng(51.509364, -0.128928),
-        zoom: 9.2,
-      ),
-      nonRotatedChildren: [
-        AttributionWidget.defaultWidget(
-          source: 'OpenStreetMap contributors',
-          onSourceTapped: null,
-        ),
-      ],
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.example.app',
-        ),
-      ],
-    )), // Put your pages in here
-    Center(child: Text('Leaderboard')), // Put your pages in here
-    Profile() // Put your pages in here
-  ];
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -91,7 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        body: pages[index],
+        body: IndexedStack(
+          children: <Widget>[
+            Homepage(),
+            Center(child: Text('Leaderboard')),
+            Profile(),
+          ],
+          index: index,
+        ),
         bottomNavigationBar: NavigationBar(
           height: 60,
           selectedIndex: index,
