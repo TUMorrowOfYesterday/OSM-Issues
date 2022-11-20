@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:app/camera.dart';
+import 'package:app/submitpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -19,7 +21,7 @@ class CurrentChallegene extends StatefulWidget {
 class _CurrentChallegeneState extends State<CurrentChallegene> {
   @override
   // distance to goal
-  double distance = 20;
+  double distance = 2;
   int count = 0;
 
   void setState(VoidCallback fn) {
@@ -107,7 +109,7 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                     Container(
                       height: MediaQuery.of(context).size.height * 0.43,
                       width: MediaQuery.of(context).size.width * 0.8,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xFFF3F3F3),
                           border: Border.symmetric(
                               horizontal: BorderSide(
@@ -116,12 +118,12 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                         padding: const EdgeInsets.only(top: 16),
                         child: Column(
                           children: [
-                            Text(
+                            const Text(
                               "Ongoing challenges",
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
                           ],
@@ -136,6 +138,17 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                       InkWell(
                         onTap: () {
                           // open Camera app
+                          Navigator.push(context, PageRouteBuilder(
+                              pageBuilder: (context, animation, secAnimation) {
+                            return SlideTransition(
+                              position: Tween<Offset>(
+                                      begin: const Offset(1, 0),
+                                      end: const Offset(0, 0))
+                                  .animate(CurvedAnimation(
+                                      parent: animation, curve: Curves.linear)),
+                              child: CameraExampleHome(),
+                            );
+                          }));
                         },
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
@@ -161,33 +174,35 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                             ),
                           ),
                         ),
-                      ),
-                    InkWell(
-                      onTap: () {},
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(27.0)),
-                          gradient: LinearGradient(
-                            colors: [Color(0x0FC030E6), Color(0x0F8865F7)],
-                            begin: Alignment(-1.0, -2.0),
-                            end: Alignment(1.0, 2.0),
+                      )
+                    else
+                      InkWell(
+                        onTap: () {},
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(27.0)),
+                            gradient: LinearGradient(
+                              colors: [Color(0x0FC030E6), Color(0x0F8865F7)],
+                              begin: Alignment(-1.0, -2.0),
+                              end: Alignment(1.0, 2.0),
+                            ),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Take Picture',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
-                        child: Center(
-                          child: Text(
-                            'Take Picture',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white),
-                          ),
-                        ),
                       ),
-                    ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {

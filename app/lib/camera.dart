@@ -42,7 +42,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   double _currentScale = 1.0;
   double _baseScale = 1.0;
 
-  String serverAddr = '10.183.53.222:5000';
+  String serverAddr = '15e5ca3e4c95ea.lhr.life/';
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;

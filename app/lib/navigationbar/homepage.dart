@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:app/Challenge/newchallenge.dart';
 import 'package:app/camera.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:tuple/tuple.dart';
+import '../globals.dart' as globals;
 
 import '../Challenge/currentchallenge.dart';
 
@@ -30,6 +33,12 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  List<String> avatarList = [
+    "assets/avatar/cat.png",
+    "assets/avatar/panda.png",
+    "assets/avatar/pinguin.png"
+  ];
+
   Position? userPosition;
 
   // automatic location updates
@@ -38,11 +47,16 @@ class _HomepageState extends State<Homepage> {
 
   List? openIssues;
 
+  List? publicPeople;
+
   List<Marker> mapToMarker() {
     List<Marker> markers = [];
     if (openIssues == null) return markers;
 
     for (var issue in openIssues!) {
+      if (issue[3] != 0.0) {
+        continue;
+      }
       markers.add(Marker(
         point: LatLng(issue[2], issue[1]),
         width: 80,
@@ -51,7 +65,7 @@ class _HomepageState extends State<Homepage> {
           onTap: () => Navigator.push(
               context,
               CustomRoute(
-                destination: const CurrentChallegene(),
+                destination: NewChallenge(issueId: issue[0]),
                 darken: true,
               )),
           child: const Icon(
@@ -60,6 +74,50 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
       ));
+    }
+
+    return markers;
+  }
+
+  List<CircleMarker> mapToCircleMarker() {
+    List<CircleMarker> markers = [];
+    if (openIssues == null) return markers;
+
+    for (var issue in openIssues!) {
+      if (issue[3] == 0.0) {
+        continue;
+      }
+      markers.add(CircleMarker(
+          point: LatLng(issue[5], issue[4]),
+          color: Colors.blue.withOpacity(0.3),
+          borderStrokeWidth: 3.0,
+          borderColor: Colors.blue,
+          useRadiusInMeter: true,
+          radius: 1000));
+    }
+
+    return markers;
+  }
+
+  List<Marker> maptoAvatar() {
+    List<Marker> markers = [];
+    if (publicPeople == null) return markers;
+
+    for (var user in publicPeople!) {
+      markers.add(
+        Marker(
+          //current position
+          point: LatLng(user[3], user[2]),
+          width: 80,
+          height: 80,
+          builder: (context) => IconButton(
+            icon: Image.asset(avatarList[user[4]]),
+            iconSize: 10,
+            onPressed: () {},
+          ),
+          //const Icon(Icons.navigation),
+        ),
+      );
     }
 
     return markers;
@@ -116,12 +174,28 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "http://172.20.10.7:5000";
-    var response = await http.get(Uri.parse(serverUrl + "/get_openIssues"));
-    if (response.statusCode == 200)
-      setState(() {
-        openIssues = jsonDecode(response.body);
-      });
+    try {
+      var response =
+          await http.get(Uri.parse(globals.serverUrl + "get_openIssues"));
+      if (response.statusCode == 200)
+        setState(() {
+          openIssues = jsonDecode(response.body);
+        });
+
+      response =
+          await http.get(Uri.parse(globals.serverUrl + "get_OthersPosition"));
+      if (response.statusCode == 200)
+        setState(() {
+          publicPeople = jsonDecode(response.body);
+        });
+
+      if (userPosition != null) {
+        response = await http.post(Uri.parse(globals.serverUrl +
+            "update_Position?user=${globals.userId}&longitude=${userPosition!.longitude}&latitude=${userPosition!.latitude}"));
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -136,7 +210,17 @@ class _HomepageState extends State<Homepage> {
       )).listen((Position? position) {
         if (position != null) {
           setState(() {
-            userPosition = position;
+            // userPosition = position;
+            userPosition = Position(
+              latitude: position.latitude,
+              longitude: position.longitude + Random().nextDouble() / 100,
+              timestamp: position.timestamp,
+              accuracy: position.accuracy,
+              altitude: position.altitude,
+              heading: position.heading,
+              speed: position.speed,
+              speedAccuracy: position.speedAccuracy,
+            );
           });
         }
       });
@@ -159,12 +243,6 @@ class _HomepageState extends State<Homepage> {
           nonRotatedChildren: [
             AttributionWidget.defaultWidget(
               source: 'OpenStreetMap',
-              onSourceTapped: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return CameraExampleHome();
-                }));
-              },
             ),
             // UI OVERLAY BUTTONS ETC HERE
             // Expanded(
@@ -179,6 +257,18 @@ class _HomepageState extends State<Homepage> {
               userAgentPackageName: 'com.example.app',
             ),
             // Layer where we can put our custom markers (see https://docs.fleaflet.dev/usage/layers/marker-layer)
+            CircleLayer(
+              circles: [
+                    CircleMarker(
+                        point: LatLng(51.509364, -0.128928),
+                        color: Colors.blue.withOpacity(0.3),
+                        borderStrokeWidth: 3.0,
+                        borderColor: Colors.blue,
+                        useRadiusInMeter: true,
+                        radius: 100)
+                  ] +
+                  mapToCircleMarker(),
+            ),
             MarkerLayer(
               markers: [
                     Marker(
@@ -189,10 +279,16 @@ class _HomepageState extends State<Homepage> {
                               userPosition!.latitude, userPosition!.longitude),
                       width: 80,
                       height: 80,
-                      builder: (context) => Icon(Icons.navigation),
+                      builder: (context) => IconButton(
+                        icon: Image.asset(avatarList[globals.avatarId]),
+                        iconSize: 10,
+                        onPressed: () {},
+                      ),
+                      //const Icon(Icons.navigation),
                     ),
                   ] +
-                  mapToMarker(),
+                  mapToMarker() +
+                  maptoAvatar(),
               rotate: true, //counter rotate to keep marker upright
             ),
           ],

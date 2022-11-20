@@ -1,13 +1,15 @@
 import 'dart:convert';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart' as http;
 
+import 'globals.dart' as globals;
+
 class SubmitPage extends StatefulWidget {
   final XFile image;
-  //final String serverAddr;
 
   const SubmitPage(
       {super.key, required this.image}); //, required this.serverAddr
@@ -17,18 +19,19 @@ class SubmitPage extends StatefulWidget {
 }
 
 class _SubmitPageState extends State<SubmitPage> {
-  String serverUrl = "172.20.10.7:5000"; //http://172.20.10.7:5000/
-
   @override
   void initState() {
     super.initState();
-    var result = uploadImageHTTP(widget.image, "fix",
-        8); //widget.image, 'https://${widget.serverAddr}/' ,
+    var result = uploadImageHTTP(widget.image, "fix", 10);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+      child: Container(
+        child: Text("Submitted!!!! YAY!!!!"),
+      ),
+    );
   }
 
   Future<int> uploadImageHTTP(imageFile, user, issue) async {
@@ -37,7 +40,7 @@ class _SubmitPageState extends State<SubmitPage> {
     var length = await imageFile.length();
 
     var uri = Uri.parse(
-        'http://' + serverUrl + "/upload_Issue?user=${user}&issue=${issue}");
+        globals.serverUrl + "upload_Issue?user=${user}&issue=${issue}");
 
     var request = http.MultipartRequest("POST", uri);
     var multipartFile =

@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import sqlite3
 import csv
+from model import torch, SingleImageDataset, HighwayClassifier, A
 
 #UPLOAD_FOLDER = './images'
 #ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -11,7 +12,9 @@ app = Flask(__name__)
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 con = sqlite3.connect("app.db", check_same_thread=False)
-
+model = HighwayClassifier().to('cuda')
+model.load_state_dict(torch.load('../training/weights/model_weights.pth'))
+model.eval()
 
 
 
@@ -62,15 +65,23 @@ def upload():
     userId = request.args['user']
     issueId = request.args['issue']
     # for better score estimation of issue
-    startLon = request.args['startLon']
-    startLat = request.args['startLat']
+    # startLon = request.args['startLon']
+    # startLat = request.args['startLat']
     request.files.get('image', '').save('image.jpg')
     
 
     # ML Model
-    res = [
-        "footway"
-    ]
+    image_ds = SingleImageDataset('image.jpg', transform=A.Compose([
+        A.Resize(150, 150),
+        A.Normalize()
+    ]))
+    image = image_ds[0].to('cuda').unsqueeze(0)
+
+
+    with torch.no_grad():
+        pred = model(image)
+    
+    res = "primary" if pred.item() > 0.5 else "footway"
 
 
     cur = con.cursor()
@@ -118,7 +129,7 @@ def updatePos():
 def others():
 
     cur = con.cursor()
-    res = cur.execute("SELECT * FROM users WHERE longitude NOT null")
+    res = cur.execute("SELECT * FROM users WHERE longitude NOT null").fetchall()
     cur.close()
 
     # return other peoples position
@@ -143,7 +154,21 @@ def closedIssues():
     cur = con.cursor()
     res = cur.execute("SELECT * FROM fixedIssues").fetchall()
     cur.close()
-    return jsonify(res)             
+    return jsonify(res)    
+
+
+
+# App POSTS updated avatar
+# returns Success
+@app.route("/setAvatar", methods=['POST'])
+def setAvatar():
+    cur = con.cursor()
+    userId = request.args['user']
+    avatar = request.args['avatar']
+    res = cur.execute("UPDATE users SET avatarId = ? WHERE userId = ?", (userId, avatar, )).fetchall()
+    con.commit()
+    cur.close()
+    return jsonify(True)               
 
 
 

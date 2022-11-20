@@ -4,6 +4,7 @@ import 'package:app/navigationbar/leaderboard.dart';
 import 'package:app/navigationbar/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as globals;
 
 void main() {
   runApp(const MyApp());
@@ -17,41 +18,41 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late String? uid;
-  late Future getUid;
-
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   _MyAppState();
 
-  @override
-  void initState() {
-    getUid = Future<void>(() async {
-      final prefs = await SharedPreferences.getInstance();
-      uid = prefs.getString("uid");
-    });
-    super.initState();
-  }
-
-  final prefs = SharedPreferences.getInstance();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      // TODO uid == null with shared preference
-      home: (1 != 1) ? StartPage() : MyHomePage(),
-    );
+    return FutureBuilder(
+        future: _prefs,
+        builder: (context, prefsnap) {
+          if (prefsnap.hasData) {
+            return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                // This is the theme of your application.
+                //
+                // Try running your application with "flutter run". You'll see the
+                // application has a blue toolbar. Then, without quitting the app, try
+                // changing the primarySwatch below to Colors.green and then invoke
+                // "hot reload" (press "r" in the console where you ran "flutter run",
+                // or simply save your changes to "hot reload" in a Flutter IDE).
+                // Notice that the counter didn't reset back to zero; the application
+                // is not restarted.
+                primarySwatch: Colors.blue,
+              ),
+              // TODO uid == null with shared preference
+              home: (prefsnap.data!.getString("uid") == null)
+                  ? StartPage()
+                  : (() {
+                      globals.userId = prefsnap.data!.getString("uid")!;
+                      return MyHomePage();
+                    })(),
+            );
+          } else
+            return MaterialApp();
+        });
   }
 }
 
