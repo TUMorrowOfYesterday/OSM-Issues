@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:tuple/tuple.dart';
+import '../globals.dart' as globals;
 
 import '../Challenge/currentchallenge.dart';
 
@@ -139,8 +140,8 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "http://172.20.10.3:5000";
-    var response = await http.get(Uri.parse(serverUrl + "/get_openIssues"));
+    var response =
+        await http.get(Uri.parse(globals.serverUrl + "get_openIssues"));
     if (response.statusCode == 200)
       setState(() {
         openIssues = jsonDecode(response.body);

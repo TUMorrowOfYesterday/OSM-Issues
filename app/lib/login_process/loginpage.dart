@@ -11,6 +11,7 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 import '../main.dart';
+import '../globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -91,9 +92,9 @@ class _LoginPageState extends State<LoginPage> {
                                 // just enter save in sharedpref
                                 // if val doenst exist
                                 if (value != '') {
-                                  var response = await http.post(Uri.parse(
-                                          // has to be dynamic path to ip adress
-                                          'http://172.20.10.3:5000/register?user=${myController.text}'),
+                                  var response = await http.post(
+                                      Uri.parse(globals.serverUrl +
+                                          'register?user=${myController.text}'),
                                       headers: <String, String>{
                                         'Content-Type':
                                             'application/json; charset=UTF-8',
