@@ -141,11 +141,11 @@ class _LeaderBoardState extends State<LeaderBoard> {
 
   void getLeaderboardList() async {
     var response = await http.get(Uri.parse(globals.serverUrl + "leaderboard"));
-    print(response.statusCode);
+    // print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
         boardList = jsonDecode(response.body);
-        print(response.body);
+        // print(response.body);
       });
     }
   }

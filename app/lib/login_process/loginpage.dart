@@ -106,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                                     // then parse the JSON.
 
                                     // save value to shared pref
+                                    globals.userId = value;
                                     _prefs!.setString("uid", value);
                                     // fix push to the end
                                     // ignore: use_build_context_synchronously
