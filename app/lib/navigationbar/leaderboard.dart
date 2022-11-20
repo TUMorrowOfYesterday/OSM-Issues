@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import '../Challenge/currentchallenge.dart';
 import 'homepage.dart';
 
+import '../globals.dart' as globals;
+
 // class BoardElements {
 //   final String uid;
 //   final int score;
@@ -138,8 +140,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
   }
 
   void getLeaderboardList() async {
-    String serverUrl = "http://172.20.10.7:5000";
-    var response = await http.get(Uri.parse(serverUrl + "/leaderboard"));
+    var response = await http.get(Uri.parse(globals.serverUrl + "leaderboard"));
     print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {

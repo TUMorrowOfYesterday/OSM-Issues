@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:app/camera.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:tuple/tuple.dart';
+import '../globals.dart' as globals;
 
 import '../Challenge/currentchallenge.dart';
 
@@ -42,6 +44,9 @@ class _HomepageState extends State<Homepage> {
     if (openIssues == null) return markers;
 
     for (var issue in openIssues!) {
+      if (issue[3] != 0.0) {
+        continue;
+      }
       markers.add(Marker(
         point: LatLng(issue[2], issue[1]),
         width: 80,
@@ -59,6 +64,26 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
       ));
+    }
+
+    return markers;
+  }
+
+  List<CircleMarker> mapToCircleMarker() {
+    List<CircleMarker> markers = [];
+    if (openIssues == null) return markers;
+
+    for (var issue in openIssues!) {
+      if (issue[3] == 0.0) {
+        continue;
+      }
+      markers.add(CircleMarker(
+          point: LatLng(issue[5], issue[4]),
+          color: Colors.blue.withOpacity(0.3),
+          borderStrokeWidth: 3.0,
+          borderColor: Colors.blue,
+          useRadiusInMeter: true,
+          radius: 1000));
     }
 
     return markers;
@@ -115,8 +140,8 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "http://172.20.10.7:5000";
-    var response = await http.get(Uri.parse(serverUrl + "/get_openIssues"));
+    var response =
+        await http.get(Uri.parse(globals.serverUrl + "get_openIssues"));
     if (response.statusCode == 200)
       setState(() {
         openIssues = jsonDecode(response.body);
@@ -142,7 +167,7 @@ class _HomepageState extends State<Homepage> {
     });
 
     // periodic updater
-    timer = Timer.periodic(Duration(seconds: 1), ((timer) => updateServer()));
+    timer = Timer.periodic(Duration(seconds: 5), ((timer) => updateServer()));
     super.initState();
   }
 
@@ -158,7 +183,12 @@ class _HomepageState extends State<Homepage> {
           nonRotatedChildren: [
             AttributionWidget.defaultWidget(
               source: 'OpenStreetMap',
-              onSourceTapped: () {},
+              onSourceTapped: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return CameraExampleHome();
+                }));
+              },
             ),
             // UI OVERLAY BUTTONS ETC HERE
             // Expanded(
@@ -173,6 +203,18 @@ class _HomepageState extends State<Homepage> {
               userAgentPackageName: 'com.example.app',
             ),
             // Layer where we can put our custom markers (see https://docs.fleaflet.dev/usage/layers/marker-layer)
+            CircleLayer(
+              circles: [
+                    CircleMarker(
+                        point: LatLng(51.509364, -0.128928),
+                        color: Colors.blue.withOpacity(0.3),
+                        borderStrokeWidth: 3.0,
+                        borderColor: Colors.blue,
+                        useRadiusInMeter: true,
+                        radius: 100)
+                  ] +
+                  mapToCircleMarker(),
+            ),
             MarkerLayer(
               markers: [
                     Marker(
