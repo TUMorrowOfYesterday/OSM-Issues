@@ -237,7 +237,7 @@ class _HomepageState extends State<Homepage> {
       child: Center(
         child: FlutterMap(
           options: MapOptions(
-            center: LatLng(51.509364, -0.128928),
+            center: LatLng(48.149145, 11.567577),
             zoom: 9.2,
           ),
           nonRotatedChildren: [
