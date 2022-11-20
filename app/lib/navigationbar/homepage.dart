@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:tuple/tuple.dart';
-import 'globals.dart' as globals;
+import '../globals.dart' as globals;
 
 import '../Challenge/currentchallenge.dart';
 
