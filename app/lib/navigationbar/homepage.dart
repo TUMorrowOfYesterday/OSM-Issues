@@ -35,7 +35,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   List<String> avatarList = [
     "assets/avatar/cat.png",
-    "assets/avatar/whale.png",
+    "assets/avatar/panda.png",
     "assets/avatar/pinguin.png"
   ];
 
@@ -227,7 +227,7 @@ class _HomepageState extends State<Homepage> {
     });
 
     // periodic updater
-    timer = Timer.periodic(Duration(seconds: 5), ((timer) => updateServer()));
+    timer = Timer.periodic(Duration(seconds: 1), ((timer) => updateServer()));
     super.initState();
   }
 

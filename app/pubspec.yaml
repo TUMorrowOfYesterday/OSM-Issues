@@ -45,10 +45,19 @@ dependencies:
   cross_file_image: ^1.0.0
   camera: ^0.10.0+4
   image_cropper: ^3.0.1
+  
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.11.0"
   flutter_test:
     sdk: flutter
+    
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/avatar/treasure-map.png"
+  min_sdk_android: 21
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
