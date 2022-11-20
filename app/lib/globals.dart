@@ -2,4 +2,4 @@ library app.globals;
 
 int avatarId = 0;
 String userId = '';
-String serverUrl = 'https://84c8737638ec11.lhr.life/';
+String serverUrl = 'https://b38b933bf6b67d.lhr.life/';
