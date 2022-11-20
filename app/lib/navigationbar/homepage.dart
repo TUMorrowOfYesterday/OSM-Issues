@@ -100,6 +100,7 @@ class _HomepageState extends State<Homepage> {
 
   List<Marker> maptoAvatar() {
     List<Marker> markers = [];
+    if (publicPeople == null) return markers;
 
     for (var user in publicPeople!) {
       markers.add(
