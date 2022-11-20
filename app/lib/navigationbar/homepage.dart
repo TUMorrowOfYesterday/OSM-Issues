@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:app/camera.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -158,7 +159,12 @@ class _HomepageState extends State<Homepage> {
           nonRotatedChildren: [
             AttributionWidget.defaultWidget(
               source: 'OpenStreetMap',
-              onSourceTapped: () {},
+              onSourceTapped: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return CameraExampleHome();
+                }));
+              },
             ),
             // UI OVERLAY BUTTONS ETC HERE
             // Expanded(
