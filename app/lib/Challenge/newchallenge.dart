@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import '../camera.dart';
+import '../globals.dart' as globals;
 
 class NewChallenge extends StatefulWidget {
   final int issueId;
@@ -41,9 +42,9 @@ class _NewChallengeState extends State<NewChallenge> {
                 child: Column(
                   children: [
                     Text(
-                      "New Challenge" + widget.issueId.toString(),
+                      "New Challenge!",
                       style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                     ),
                     const SizedBox(
                       height: 20,
@@ -57,6 +58,9 @@ class _NewChallengeState extends State<NewChallenge> {
                       InkWell(
                         onTap: () {
                           // Accept challenge
+                          setState(() {
+                            globals.currentChallengeId = widget.issueId;
+                          });
                         },
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,

@@ -46,7 +46,6 @@ class _HomepageState extends State<Homepage> {
   late Timer timer;
 
   List? openIssues;
-
   List? publicPeople;
 
   List<Marker> mapToMarker() {
@@ -54,6 +53,10 @@ class _HomepageState extends State<Homepage> {
     if (openIssues == null) return markers;
 
     for (var issue in openIssues!) {
+      if (globals.currentChallengeId != -1 &&
+          issue[0] != globals.currentChallengeId) {
+        continue;
+      }
       if (issue[3] != 0.0) {
         continue;
       }
@@ -84,6 +87,10 @@ class _HomepageState extends State<Homepage> {
     if (openIssues == null) return markers;
 
     for (var issue in openIssues!) {
+      if (globals.currentChallengeId != -1 &&
+          issue[0] != globals.currentChallengeId) {
+        continue;
+      }
       if (issue[3] == 0.0) {
         continue;
       }
@@ -104,6 +111,7 @@ class _HomepageState extends State<Homepage> {
     if (publicPeople == null) return markers;
 
     for (var user in publicPeople!) {
+      if (user[0] == globals.userId) continue;
       markers.add(
         Marker(
           //current position
@@ -112,7 +120,7 @@ class _HomepageState extends State<Homepage> {
           height: 80,
           builder: (context) => IconButton(
             icon: Image.asset(avatarList[user[4]]),
-            iconSize: 10,
+            iconSize: 8,
             onPressed: () {},
           ),
           //const Icon(Icons.navigation),
@@ -210,24 +218,24 @@ class _HomepageState extends State<Homepage> {
       )).listen((Position? position) {
         if (position != null) {
           setState(() {
-            // userPosition = position;
-            userPosition = Position(
-              latitude: position.latitude,
-              longitude: position.longitude + Random().nextDouble() / 100,
-              timestamp: position.timestamp,
-              accuracy: position.accuracy,
-              altitude: position.altitude,
-              heading: position.heading,
-              speed: position.speed,
-              speedAccuracy: position.speedAccuracy,
-            );
+            userPosition = position;
+            // userPosition = Position(
+            //   latitude: position.latitude,
+            //   longitude: position.longitude + Random().nextDouble() / 100,
+            //   timestamp: position.timestamp,
+            //   accuracy: position.accuracy,
+            //   altitude: position.altitude,
+            //   heading: position.heading,
+            //   speed: position.speed,
+            //   speedAccuracy: position.speedAccuracy,
+            // );
           });
         }
       });
     });
 
     // periodic updater
-    timer = Timer.periodic(Duration(seconds: 5), ((timer) => updateServer()));
+    timer = Timer.periodic(Duration(seconds: 1), ((timer) => updateServer()));
     super.initState();
   }
 
@@ -237,7 +245,7 @@ class _HomepageState extends State<Homepage> {
       child: Center(
         child: FlutterMap(
           options: MapOptions(
-            center: LatLng(51.509364, -0.128928),
+            center: LatLng(48.26271990064618, 11.669327218792182),
             zoom: 9.2,
           ),
           nonRotatedChildren: [
@@ -245,11 +253,18 @@ class _HomepageState extends State<Homepage> {
               source: 'OpenStreetMap',
             ),
             // UI OVERLAY BUTTONS ETC HERE
-            // Expanded(
-            //   child: Center(
-            //     child: Text("HELLO WORLDl\nasdjfladsjflksafjalks"),
-            //   ),
-            // )
+
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Current Challenge: ${globals.currentChallengeId}",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 5)]),
+                ),
+              ),
+            )
           ],
           children: [
             TileLayer(
@@ -281,7 +296,7 @@ class _HomepageState extends State<Homepage> {
                       height: 80,
                       builder: (context) => IconButton(
                         icon: Image.asset(avatarList[globals.avatarId]),
-                        iconSize: 10,
+                        iconSize: 12,
                         onPressed: () {},
                       ),
                       //const Icon(Icons.navigation),
