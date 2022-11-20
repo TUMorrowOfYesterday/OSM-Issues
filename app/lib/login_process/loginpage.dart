@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import '../main.dart';
+import '../globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -80,8 +81,8 @@ class _LoginPageState extends State<LoginPage> {
                                 // if val doenst exist
                                 if (value != '') {
                                   var response = await http.post(
-                                      Uri.parse(
-                                          'http://131.159.196.209:5000/register?user=${myController.text}'),
+                                      Uri.parse(globals.serverUrl +
+                                          'register?user=${myController.text}'),
                                       headers: <String, String>{
                                         'Content-Type':
                                             'application/json; charset=UTF-8',

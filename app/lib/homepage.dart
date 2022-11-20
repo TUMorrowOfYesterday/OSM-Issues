@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:tuple/tuple.dart';
+import 'globals.dart' as globals;
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -100,9 +101,8 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "131.159.196.209:5000";
     var response =
-        await http.get(Uri.parse("http://" + serverUrl + "/get_openIssues"));
+        await http.get(Uri.parse(globals.serverUrl + "get_openIssues"));
     if (response.statusCode == 200)
       setState(() {
         openIssues = jsonDecode(response.body);
