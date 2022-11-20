@@ -109,7 +109,7 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                     Container(
                       height: MediaQuery.of(context).size.height * 0.43,
                       width: MediaQuery.of(context).size.width * 0.8,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xFFF3F3F3),
                           border: Border.symmetric(
                               horizontal: BorderSide(
@@ -118,12 +118,12 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                         padding: const EdgeInsets.only(top: 16),
                         child: Column(
                           children: [
-                            Text(
+                            const Text(
                               "Ongoing challenges",
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
                           ],

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:app/Challenge/newchallenge.dart';
 import 'package:app/camera.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -31,6 +32,12 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  List<String> avatarList = [
+    "assets/avatar/cat.png",
+    "assets/avatar/sloth.jpg",
+    "assets/avatar/pinguin.png"
+  ];
+
   Position? userPosition;
 
   // automatic location updates
@@ -55,7 +62,7 @@ class _HomepageState extends State<Homepage> {
           onTap: () => Navigator.push(
               context,
               CustomRoute(
-                destination: const CurrentChallegene(),
+                destination: NewChallenge(issueId: issue[0]),
                 darken: true,
               )),
           child: const Icon(
@@ -225,7 +232,12 @@ class _HomepageState extends State<Homepage> {
                               userPosition!.latitude, userPosition!.longitude),
                       width: 80,
                       height: 80,
-                      builder: (context) => Icon(Icons.navigation),
+                      builder: (context) => IconButton(
+                        icon: Image.asset(avatarList[globals.avatarId]),
+                        iconSize: 10,
+                        onPressed: () {},
+                      ),
+                      //const Icon(Icons.navigation),
                     ),
                   ] +
                   mapToMarker(),
