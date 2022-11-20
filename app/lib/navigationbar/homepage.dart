@@ -203,6 +203,18 @@ class _HomepageState extends State<Homepage> {
               userAgentPackageName: 'com.example.app',
             ),
             // Layer where we can put our custom markers (see https://docs.fleaflet.dev/usage/layers/marker-layer)
+            CircleLayer(
+              circles: [
+                    CircleMarker(
+                        point: LatLng(51.509364, -0.128928),
+                        color: Colors.blue.withOpacity(0.3),
+                        borderStrokeWidth: 3.0,
+                        borderColor: Colors.blue,
+                        useRadiusInMeter: true,
+                        radius: 100)
+                  ] +
+                  mapToCircleMarker(),
+            ),
             MarkerLayer(
               markers: [
                     Marker(
@@ -219,18 +231,6 @@ class _HomepageState extends State<Homepage> {
                   mapToMarker(),
               rotate: true, //counter rotate to keep marker upright
             ),
-            CircleLayer(
-              circles: [
-                    CircleMarker(
-                        point: LatLng(51.509364, -0.128928),
-                        color: Colors.blue.withOpacity(0.3),
-                        borderStrokeWidth: 3.0,
-                        borderColor: Colors.blue,
-                        useRadiusInMeter: true,
-                        radius: 100)
-                  ] +
-                  mapToCircleMarker(),
-            )
           ],
         ),
       ),
