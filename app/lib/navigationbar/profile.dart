@@ -60,22 +60,28 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Center(
                         child: IconButton(
-                            icon: ClipOval(
-                              child: Image(
-                                width: 200,
-                                image: AssetImage(avatarList[globals.avatarId]),
-                              ),
+                            splashRadius: 15.5,
+                            icon: Image(
+                              width: 200,
+                              image: AssetImage(avatarList[globals.avatarId]),
                             ),
+                            // icon: ClipOval(
+                            //   child: Image(
+                            //     width: 200,
+                            //     image: AssetImage(avatarList[globals.avatarId]),
+                            //   ),
+                            // ),
                             onPressed: () async {
-                              var response = await http.post(Uri.parse(globals
-                                      .serverUrl +
-                                  "set_Avatar?user=${globals.userId}&avatar=${(globals.avatarId + 1) % 3}"));
-                              if (jsonDecode(response.body) == true) {
+                              {
                                 setState(() {
                                   globals.avatarId = (globals.avatarId + 1) % 3;
                                 });
                               }
-                            }),
+                              var response = await http.post(Uri.parse(globals
+                                      .serverUrl +
+                                  "setAvatar?user=${globals.userId}&avatar=${(globals.avatarId)}"));
+                            },
+                            iconSize: 10.5),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
