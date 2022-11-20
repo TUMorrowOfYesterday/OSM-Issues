@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:app/navigationbar/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:image_cropper/image_cropper.dart';
+
+import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,10 +19,8 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-// set at the end of login ur uid
-// prefs.setString("uid", userid);
-
 class _LoginPageState extends State<LoginPage> {
+  Future<SharedPreferences> a_prefs = SharedPreferences.getInstance();
   final myController = TextEditingController();
 
   @override
@@ -45,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    icon: Icon(Icons.close)),
+                                    icon: const Icon(Icons.close)),
                               ],
                             ),
                           ),
@@ -69,22 +74,41 @@ class _LoginPageState extends State<LoginPage> {
                           Container(
                             width: MediaQuery.of(context).size.width,
                             margin: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
+                            child: TextField(
                               controller: myController,
-                              onSaved: (value) {
+                              onSubmitted: (value) async {
                                 // if val exists in database resgister anfrage
                                 // just enter save in sharedpref
                                 // if val doenst exist
-                                if (value != null) {
-                                  // save it to the database
-                                  value = value;
-                                  String test = myController.text;
-                                  print(test);
-                                  final prefs = SharedPreferences.getInstance();
-                                  // save value to shared pref
-                                  //prefs.setString("uid", value);
+                                if (value != '') {
+                                  var response = await http.post(Uri.parse(
+                                          // has to be dynamic path to ip adress
+                                          'http://172.20.10.7:5000/register?user=${myController.text}'),
+                                      headers: <String, String>{
+                                        'Content-Type':
+                                            'application/json; charset=UTF-8',
+                                      });
+                                  // print(response.body);
+                                  if (response.statusCode == 200 &&
+                                      jsonDecode(response.body) == true) {
+                                    // If the server did return a 201 CREATED response,
+                                    // then parse the JSON.
+
+                                    // save value to shared pref
+
+                                    // fix push to the end
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => MyHomePage()),
+                                        (Route<dynamic> route) => false);
+                                  } else {
+                                    // If the server did not return a 201 CREATED response,
+                                    // then throw an exception.
+                                    // Maybe snackbar
+                                    throw Exception('Failed to Register');
+                                  }
                                 }
-                                print("not saved");
                               },
                               autofocus: true,
                               decoration: InputDecoration(
