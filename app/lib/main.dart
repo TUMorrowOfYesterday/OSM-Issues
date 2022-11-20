@@ -4,6 +4,7 @@ import 'package:app/navigationbar/leaderboard.dart';
 import 'package:app/navigationbar/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as globals;
 
 void main() {
   runApp(const MyApp());
@@ -42,11 +43,12 @@ class _MyAppState extends State<MyApp> {
                 primarySwatch: Colors.blue,
               ),
               // TODO uid == null with shared preference
-              home:
-                  // (prefsnap.data!.getString("uid") == null)
-                  //     ? StartPage()
-                  //     :
-                  MyHomePage(),
+              home: (prefsnap.data!.getString("uid") == null)
+                  ? StartPage()
+                  : (() {
+                      globals.userId = prefsnap.data!.getString("uid")!;
+                      return MyHomePage();
+                    })(),
             );
           } else
             return MaterialApp();
