@@ -52,6 +52,29 @@ class LabelledImageDataset(Dataset):
         return torch.tensor(image).float(), torch.tensor(is_highway).float().unsqueeze(0)
 
 
+class SingleImageDataset(Dataset):
+    def __init__(self, img_path, transform=None):
+        self.image = crop(cv2.imread(img_path))[:, :, ::-1]
+
+        if transform is not None:
+            res = transform(image=self.image)
+            self.image = res['image'].astype(np.float32)
+        else:
+            self.image = self.image.astype(np.float32)
+        
+        # transpose to (C, H, W)
+        self.image = self.image.transpose(2, 0, 1)
+
+        self.image = torch.tensor(self.image).float()
+
+    def __len__(self):
+        return 1
+    
+    def __getitem__(self, index):
+        return self.image
+
+
+
 
 
 # Model
@@ -117,53 +140,3 @@ class HighwayClassifier(ImageBinClassificationBase):
     
     def forward(self, xb):
         return self.network(xb)
-
-
-def accuracy(outputs, labels):
-    _, preds = torch.max(outputs, dim=1)
-    return torch.tensor(torch.sum(preds == labels).item() / len(preds))
-
-  
-@torch.no_grad()
-def evaluate(model, val_loader):
-    model.eval()
-    outputs = [model.validation_step(batch) for batch in val_loader]
-    return model.validation_epoch_end(outputs)
-
-  
-def fit(epochs, lr, model, train_loader, val_loader, opt_func = torch.optim.SGD):
-    
-    history = []
-    optimizer = opt_func(model.parameters(),lr)
-    for epoch in range(epochs):
-        
-        model.train()
-        train_losses = []
-        for batch in train_loader:
-            loss = model.training_step(batch)
-            train_losses.append(loss)
-            loss.backward()
-            optimizer.step()
-            optimizer.zero_grad()
-            
-        result = evaluate(model, val_loader)
-        result['train_loss'] = torch.stack(train_losses).mean().item()
-        model.epoch_end(epoch, result)
-        history.append(result)
-    
-    return history
-
-
-# Loss and optimizer
-
-
-
-# Train network
-
-
-
-# Test network
-
-
-
-# Save the model checkpoint
