@@ -115,7 +115,7 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "http://172.20.10.7:5000";
+    String serverUrl = "http://172.20.10.3:5000";
     var response = await http.get(Uri.parse(serverUrl + "/get_openIssues"));
     if (response.statusCode == 200)
       setState(() {
@@ -189,6 +189,16 @@ class _HomepageState extends State<Homepage> {
                   mapToMarker(),
               rotate: true, //counter rotate to keep marker upright
             ),
+            CircleLayer(
+              circles: [
+                CircleMarker(
+                    point: LatLng(51.509364, -0.128928),
+                    color: Colors.blue.withOpacity(0.3),
+                    borderStrokeWidth: 3.0,
+                    borderColor: Colors.blue,
+                    radius: 100)
+              ],
+            )
           ],
         ),
       ),

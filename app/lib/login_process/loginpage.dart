@@ -20,8 +20,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Future<SharedPreferences> a_prefs = SharedPreferences.getInstance();
+  SharedPreferences? _prefs;
   final myController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    SharedPreferences.getInstance().then((prefs) {
+      _prefs = prefs;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if (value != '') {
                                   var response = await http.post(Uri.parse(
                                           // has to be dynamic path to ip adress
-                                          'http://172.20.10.7:5000/register?user=${myController.text}'),
+                                          'http://172.20.10.3:5000/register?user=${myController.text}'),
                                       headers: <String, String>{
                                         'Content-Type':
                                             'application/json; charset=UTF-8',
@@ -95,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                                     // then parse the JSON.
 
                                     // save value to shared pref
-
+                                    _prefs!.setString("uid", value);
                                     // fix push to the end
                                     // ignore: use_build_context_synchronously
                                     Navigator.of(context).pushAndRemoveUntil(
