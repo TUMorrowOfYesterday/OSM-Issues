@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart' as http;
@@ -21,12 +22,16 @@ class _SubmitPageState extends State<SubmitPage> {
   @override
   void initState() {
     super.initState();
-    var result = uploadImageHTTP(widget.image, "fix", 8);
+    var result = uploadImageHTTP(widget.image, "fix", 10);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+      child: Container(
+        child: Text("Submitted!!!! YAY!!!!"),
+      ),
+    );
   }
 
   Future<int> uploadImageHTTP(imageFile, user, issue) async {
