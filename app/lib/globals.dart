@@ -1,5 +1,5 @@
 library app.globals;
 
-String serverUrl = 'http://a62f-138-246-3-9.eu.ngrok.io/';
 int avatarId = 0;
 String userId = '';
+String serverUrl = 'https://d3a515a35c6d42.lhr.life/';
