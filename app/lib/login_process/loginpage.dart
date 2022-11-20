@@ -20,6 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<SharedPreferences> a_prefs = SharedPreferences.getInstance();
   final myController = TextEditingController();
 
   @override
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    icon: Icon(Icons.close)),
+                                    icon: const Icon(Icons.close)),
                               ],
                             ),
                           ),
@@ -82,19 +83,19 @@ class _LoginPageState extends State<LoginPage> {
                                 if (value != '') {
                                   var response = await http.post(Uri.parse(
                                           // has to be dynamic path to ip adress
-                                          'http://10.93.24.154:5000/register?user=${myController.text}'),
+                                          'http://172.20.10.7:5000/register?user=${myController.text}'),
                                       headers: <String, String>{
                                         'Content-Type':
                                             'application/json; charset=UTF-8',
                                       });
-                                  print(response.body);
+                                  // print(response.body);
                                   if (response.statusCode == 200 &&
                                       jsonDecode(response.body) == true) {
                                     // If the server did return a 201 CREATED response,
                                     // then parse the JSON.
 
                                     // save value to shared pref
-                                    //prefs.setString("uid", value);
+
                                     // fix push to the end
                                     // ignore: use_build_context_synchronously
                                     Navigator.of(context).pushAndRemoveUntil(

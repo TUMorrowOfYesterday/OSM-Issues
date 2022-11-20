@@ -1,9 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:http/http.dart' as http;
 
 import '../Challenge/currentchallenge.dart';
 import 'homepage.dart';
+
+// class BoardElements {
+//   final String uid;
+//   final int score;
+//   final int avatarId;
+
+//   const BoardElements({
+//     required this.uid,
+//     required this.score,
+//     required this.avatarId,
+//   });
+
+//   factory BoardElements.fromJson(Map<String, dynamic> json) {
+//     return BoardElements(
+//       uid: json['uid'],
+//       score: json['score'],
+//       avatarId: json['avatarId'],
+//     );
+//   }
+// }
 
 class LeaderBoard extends StatefulWidget {
   const LeaderBoard({super.key});
@@ -13,22 +36,153 @@ class LeaderBoard extends StatefulWidget {
 }
 
 class _LeaderBoardState extends State<LeaderBoard> {
+  List? boardList;
+
+  List<Widget> mapToMarker() {
+    List<Widget> results = [];
+    if (boardList == null) return results;
+    for (int i = 0; i < boardList!.length; i++) {
+      results.add(Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // boardList
+            if (i == 0)
+              Text(
+                "${i + 1}.  ",
+                style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.red),
+              )
+            else if (i == 1)
+              Text(
+                "${i + 1}.  ",
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.orange),
+              )
+            else
+              Text(
+                "${i + 1}.  ",
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
+              ),
+            if (i == 0)
+              Text(
+                boardList![i][0] + "  ",
+                style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.red),
+              )
+            else if (i == 1)
+              Text(
+                boardList![i][0] + "  ",
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.orange),
+              )
+            else
+              Text(
+                boardList![i][0] + "  ",
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
+              ),
+            if (i == 0)
+              Padding(
+                padding: const EdgeInsets.only(right: 32.0),
+                child: Text(
+                  boardList![i][1].toString(),
+                  style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red),
+                ),
+              )
+            else if (i == 1)
+              Padding(
+                padding: const EdgeInsets.only(right: 32.0),
+                child: Text(
+                  boardList![i][1].toString(),
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.orange),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(right: 32.0),
+                child: Text(
+                  boardList![i][1].toString(),
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+              ),
+          ],
+        ),
+      ));
+    }
+
+    return results;
+  }
+
+  void getLeaderboardList() async {
+    String serverUrl = "http://172.20.10.7:5000";
+    var response = await http.get(Uri.parse(serverUrl + "/leaderboard"));
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      setState(() {
+        boardList = jsonDecode(response.body);
+        print(response.body);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLeaderboardList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   children: const [
-            //     Padding(
-            //       padding: EdgeInsets.only(top: 10),
-            //       child: Text('Profile'),
-            //     )
-            //   ],
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(left: 32.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Leaderboard',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 34,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 // Bounce Bounce
@@ -36,24 +190,19 @@ class _LeaderBoardState extends State<LeaderBoard> {
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
                 child: Container(
-                  height: MediaQuery.of(context).size.height / 1.2,
-                  padding: const EdgeInsets.only(top: 20),
+                  // height: MediaQuery.of(context).size.height / 1.0,
+                  padding: const EdgeInsets.only(top: 20, left: 32.0),
                   child: Column(
                     children: [
-                      const Center(
-                        child: ClipOval(
-                            child: Image(
-                                width: 200,
-                                image: AssetImage('assets/avatar/sloth.jpg'))),
-                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
                             width: 30.0,
                             child: const Icon(
-                              Icons.person,
-                              size: 32,
+                              Icons.leaderboard,
+                              size: 30,
+                              color: Colors.blue,
                             ),
                           ),
                           const SizedBox(
@@ -62,65 +211,18 @@ class _LeaderBoardState extends State<LeaderBoard> {
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 18.0),
                             child: Text(
-                              'My Avatar',
+                              'Ranking',
                               style: TextStyle(
-                                  fontSize: 26,
+                                  fontSize: 30,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                                  color: Colors.blue),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      InkWell(
-                        onTap: () => Navigator.push(
-                            context,
-                            CustomRoute(
-                              destination: const CurrentChallegene(),
-                              darken: true,
-                            )),
-                        child: Container(
-                          height: MediaQuery.of(context).size.width * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30.0)),
-                            gradient: LinearGradient(
-                              colors: [Color(0xAF18E299), Color(0xAF0FFAE6)],
-                              begin: Alignment(-1.0, -2.0),
-                              end: Alignment(1.0, 2.0),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 12.0,
-                                    child: const Icon(Icons.task,
-                                        color: Colors.black),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 18.0),
-                                    child: Text(
-                                      'My Challenges',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      const SizedBox(height: 8),
+                      // get ranking by getindex -= 1;
+                      Column(children: mapToMarker()),
                     ],
                   ),
                 ),

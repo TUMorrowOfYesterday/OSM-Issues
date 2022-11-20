@@ -115,9 +115,8 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "10.93.24.154:5000/";
-    var response =
-        await http.get(Uri.parse("http://" + serverUrl + "/get_openIssues"));
+    String serverUrl = "http://172.20.10.7:5000";
+    var response = await http.get(Uri.parse(serverUrl + "/get_openIssues"));
     if (response.statusCode == 200)
       setState(() {
         openIssues = jsonDecode(response.body);
