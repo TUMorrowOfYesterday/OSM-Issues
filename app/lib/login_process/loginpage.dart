@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:app/homepage.dart';
+import 'package:app/navigationbar/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 import '../main.dart';
 import '../globals.dart' as globals;
@@ -20,6 +21,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<SharedPreferences> a_prefs = SharedPreferences.getInstance();
   final myController = TextEditingController();
 
   @override
@@ -49,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    icon: Icon(Icons.close)),
+                                    icon: const Icon(Icons.close)),
                               ],
                             ),
                           ),
@@ -87,14 +89,14 @@ class _LoginPageState extends State<LoginPage> {
                                         'Content-Type':
                                             'application/json; charset=UTF-8',
                                       });
-                                  print(response.body);
+                                  // print(response.body);
                                   if (response.statusCode == 200 &&
                                       jsonDecode(response.body) == true) {
                                     // If the server did return a 201 CREATED response,
                                     // then parse the JSON.
 
                                     // save value to shared pref
-                                    //prefs.setString("uid", value);
+
                                     // fix push to the end
                                     // ignore: use_build_context_synchronously
                                     Navigator.of(context).pushAndRemoveUntil(
