@@ -116,7 +116,7 @@ def updatePos():
 def others():
 
     cur = con.cursor()
-    res = cur.execute("SELECT * FROM users WHERE longitude NOT null")
+    res = cur.execute("SELECT * FROM users WHERE longitude NOT null").fetchall()
     cur.close()
 
     # return other peoples position
@@ -155,7 +155,7 @@ def setAvatar():
     res = cur.execute("UPDATE users SET avatarId = ? WHERE userId = ?", (userId, avatar, )).fetchall()
     con.commit()
     cur.close()
-    return jsonify(res)               
+    return jsonify(True)               
 
 
 
