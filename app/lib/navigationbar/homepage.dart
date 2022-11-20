@@ -173,19 +173,23 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    var response =
-        await http.get(Uri.parse(globals.serverUrl + "get_openIssues"));
-    if (response.statusCode == 200)
-      setState(() {
-        openIssues = jsonDecode(response.body);
-      });
+    try {
+      var response =
+          await http.get(Uri.parse(globals.serverUrl + "get_openIssues"));
+      if (response.statusCode == 200)
+        setState(() {
+          openIssues = jsonDecode(response.body);
+        });
 
-    response =
-        await http.get(Uri.parse(globals.serverUrl + "get_OthersPosition"));
-    if (response.statusCode == 200)
-      setState(() {
-        publicPeople = jsonDecode(response.body);
-      });
+      response =
+          await http.get(Uri.parse(globals.serverUrl + "get_OthersPosition"));
+      if (response.statusCode == 200)
+        setState(() {
+          publicPeople = jsonDecode(response.body);
+        });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
