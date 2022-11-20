@@ -44,6 +44,9 @@ class _HomepageState extends State<Homepage> {
     if (openIssues == null) return markers;
 
     for (var issue in openIssues!) {
+      if (issue[3] != 0.0) {
+        continue;
+      }
       markers.add(Marker(
         point: LatLng(issue[2], issue[1]),
         width: 80,
@@ -61,6 +64,26 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
       ));
+    }
+
+    return markers;
+  }
+
+  List<CircleMarker> mapToCircleMarker() {
+    List<CircleMarker> markers = [];
+    if (openIssues == null) return markers;
+
+    for (var issue in openIssues!) {
+      if (issue[3] == 0.0) {
+        continue;
+      }
+      markers.add(CircleMarker(
+          point: LatLng(issue[5], issue[4]),
+          color: Colors.blue.withOpacity(0.3),
+          borderStrokeWidth: 3.0,
+          borderColor: Colors.blue,
+          useRadiusInMeter: true,
+          radius: 1000));
     }
 
     return markers;
@@ -196,6 +219,18 @@ class _HomepageState extends State<Homepage> {
                   mapToMarker(),
               rotate: true, //counter rotate to keep marker upright
             ),
+            CircleLayer(
+              circles: [
+                    CircleMarker(
+                        point: LatLng(51.509364, -0.128928),
+                        color: Colors.blue.withOpacity(0.3),
+                        borderStrokeWidth: 3.0,
+                        borderColor: Colors.blue,
+                        useRadiusInMeter: true,
+                        radius: 100)
+                  ] +
+                  mapToCircleMarker(),
+            )
           ],
         ),
       ),
