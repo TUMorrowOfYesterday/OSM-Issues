@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:app/Challenge/newchallenge.dart';
@@ -187,6 +188,11 @@ class _HomepageState extends State<Homepage> {
         setState(() {
           publicPeople = jsonDecode(response.body);
         });
+
+      if (userPosition != null) {
+        response = await http.post(Uri.parse(globals.serverUrl +
+            "update_Position?user=${globals.userId}&longitude=${userPosition!.longitude}&latitude=${userPosition!.latitude}"));
+      }
     } catch (e) {
       print(e);
     }
@@ -204,7 +210,17 @@ class _HomepageState extends State<Homepage> {
       )).listen((Position? position) {
         if (position != null) {
           setState(() {
-            userPosition = position;
+            // userPosition = position;
+            userPosition = Position(
+              latitude: position.latitude,
+              longitude: position.longitude + Random().nextDouble() / 100,
+              timestamp: position.timestamp,
+              accuracy: position.accuracy,
+              altitude: position.altitude,
+              heading: position.heading,
+              speed: position.speed,
+              speedAccuracy: position.speedAccuracy,
+            );
           });
         }
       });
