@@ -141,7 +141,21 @@ def closedIssues():
     cur = con.cursor()
     res = cur.execute("SELECT * FROM fixedIssues").fetchall()
     cur.close()
-    return jsonify(res)             
+    return jsonify(res)    
+
+
+
+# App POSTS updated avatar
+# returns Success
+@app.route("/setAvatar", methods=['POST'])
+def setAvatar():
+    cur = con.cursor()
+    userId = request.args['user']
+    avatar = request.args['avatar']
+    res = cur.execute("UPDATE users SET avatarId = ? WHERE userId = ?", (userId, avatar, )).fetchall()
+    con.commit()
+    cur.close()
+    return jsonify(res)               
 
 
 
