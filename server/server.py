@@ -62,15 +62,13 @@ def upload():
     userId = request.args['user']
     issueId = request.args['issue']
     # for better score estimation of issue
-    startLon = request.args['startLon']
-    startLat = request.args['startLat']
+    # startLon = request.args['startLon']
+    # startLat = request.args['startLat']
     request.files.get('image', '').save('image.jpg')
     
 
     # ML Model
-    res = [
-        "footway"
-    ]
+    res = "footway"
 
 
     cur = con.cursor()
