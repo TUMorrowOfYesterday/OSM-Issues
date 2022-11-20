@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import '../globals.dart' as globals;
 
 import '../Provider/layoutprovider.dart';
 
@@ -67,10 +68,10 @@ class _ProfileState extends State<Profile> {
                           const SizedBox(
                             width: 15,
                           ),
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: 18.0),
                             child: Text(
-                              'My Avatar',
+                              globals.userId,
                               style: TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.w600,
