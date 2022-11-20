@@ -1,6 +1,7 @@
-import 'package:app/homepage.dart';
+import 'package:app/navigationbar/homepage.dart';
 import 'package:app/login_process/startpage.dart';
-import 'package:app/profile.dart';
+import 'package:app/navigationbar/leaderboard.dart';
+import 'package:app/navigationbar/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,8 +49,8 @@ class _MyAppState extends State<MyApp> {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      // uid == null
-      home: (1 == 1) ? StartPage() : MyHomePage(),
+      // TODO uid == null with shared preference
+      home: (1 != 1) ? StartPage() : MyHomePage(),
     );
   }
 }
@@ -86,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: IndexedStack(
           children: <Widget>[
             Homepage(),
-            Center(child: Text('Leaderboard')),
+            LeaderBoard(),
             Profile(),
           ],
           index: index,

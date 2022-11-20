@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:tuple/tuple.dart';
+
+import '../Challenge/currentchallenge.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -40,10 +43,22 @@ class _HomepageState extends State<Homepage> {
 
     for (var issue in openIssues!) {
       markers.add(Marker(
-          point: LatLng(issue[2], issue[1]),
-          width: 80,
-          height: 80,
-          builder: (context) => Icon(Icons.location_on)));
+        point: LatLng(issue[2], issue[1]),
+        width: 80,
+        height: 80,
+        builder: (context) => GestureDetector(
+          onTap: () => Navigator.push(
+              context,
+              CustomRoute(
+                destination: const CurrentChallegene(),
+                darken: true,
+              )),
+          child: const Icon(
+            Icons.location_on,
+            size: 50,
+          ),
+        ),
+      ));
     }
 
     return markers;
@@ -100,9 +115,8 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "131.159.196.209:5000";
-    var response =
-        await http.get(Uri.parse("http://" + serverUrl + "/get_openIssues"));
+    String serverUrl = "http://172.20.10.7:5000";
+    var response = await http.get(Uri.parse(serverUrl + "/get_openIssues"));
     if (response.statusCode == 200)
       setState(() {
         openIssues = jsonDecode(response.body);
@@ -186,4 +200,71 @@ class _HomepageState extends State<Homepage> {
     super.dispose();
     timer.cancel();
   }
+}
+
+class CustomRoute extends PageRouteBuilder {
+  final Widget destination;
+  final bool darken;
+
+  CustomRoute({required this.destination, this.darken = false})
+      : super(
+            opaque: false,
+            transitionDuration: Duration(milliseconds: 500),
+            transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secAnimation,
+              Widget child,
+            ) {
+              animation =
+                  CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+              return Stack(
+                children: <Widget>[
+                  FrostTransition(
+                    animation: new Tween<double>(
+                      begin: 0.0,
+                      end: 5.0,
+                    ).animate(animation),
+                    darken: darken,
+                  ),
+                  /*FadeTransition(
+                opacity: animation,
+                child: child,
+              ),*/
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, 1),
+                      end: const Offset(0, 0),
+                    ).animate(animation),
+                    child: child,
+                  )
+                ],
+              );
+            },
+            pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secAnimation,
+            ) {
+              return destination;
+            });
+}
+
+class FrostTransition extends AnimatedWidget {
+  final Animation<double> animation;
+  final bool darken;
+
+  FrostTransition({required this.animation, required this.darken})
+      : super(listenable: animation);
+
+  @override
+  Widget build(BuildContext context) => new BackdropFilter(
+        filter:
+            ImageFilter.blur(sigmaX: animation.value, sigmaY: animation.value),
+        child: Container(
+          color: darken
+              ? Colors.black.withOpacity(animation.value * 0.1)
+              : Colors.white.withOpacity(0.0),
+        ),
+      );
 }
