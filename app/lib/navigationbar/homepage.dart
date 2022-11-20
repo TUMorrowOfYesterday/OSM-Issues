@@ -34,7 +34,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   List<String> avatarList = [
     "assets/avatar/cat.png",
-    "assets/avatar/sloth.jpg",
+    "assets/avatar/whale.png",
     "assets/avatar/pinguin.png"
   ];
 
@@ -45,6 +45,8 @@ class _HomepageState extends State<Homepage> {
   late Timer timer;
 
   List? openIssues;
+
+  List? publicPeople;
 
   List<Marker> mapToMarker() {
     List<Marker> markers = [];
@@ -91,6 +93,29 @@ class _HomepageState extends State<Homepage> {
           borderColor: Colors.blue,
           useRadiusInMeter: true,
           radius: 1000));
+    }
+
+    return markers;
+  }
+
+  List<Marker> maptoAvatar() {
+    List<Marker> markers = [];
+
+    for (var user in publicPeople!) {
+      markers.add(
+        Marker(
+          //current position
+          point: LatLng(user[3], user[2]),
+          width: 80,
+          height: 80,
+          builder: (context) => IconButton(
+            icon: Image.asset(avatarList[user[4]]),
+            iconSize: 10,
+            onPressed: () {},
+          ),
+          //const Icon(Icons.navigation),
+        ),
+      );
     }
 
     return markers;
@@ -152,6 +177,13 @@ class _HomepageState extends State<Homepage> {
     if (response.statusCode == 200)
       setState(() {
         openIssues = jsonDecode(response.body);
+      });
+
+    response =
+        await http.get(Uri.parse(globals.serverUrl + "get_OthersPosition"));
+    if (response.statusCode == 200)
+      setState(() {
+        publicPeople = jsonDecode(response.body);
       });
   }
 
@@ -234,7 +266,8 @@ class _HomepageState extends State<Homepage> {
                       //const Icon(Icons.navigation),
                     ),
                   ] +
-                  mapToMarker(),
+                  mapToMarker() +
+                  maptoAvatar(),
               rotate: true, //counter rotate to keep marker upright
             ),
           ],
