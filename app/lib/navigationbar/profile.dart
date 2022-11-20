@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:app/Challenge/currentchallenge.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import '../globals.dart' as globals;
+import 'dart:async';
+import 'package:http/http.dart' as http;
 
 import '../Provider/layoutprovider.dart';
 
@@ -19,6 +22,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  List<String> avatarList = [
+    "assets/avatar/cat.png",
+    "assets/avatar/panda.png",
+    "assets/avatar/pinguin.png"
+  ];
+
   late LayoutProvider userProvider;
   @override
   Widget build(BuildContext context) {
@@ -49,11 +58,24 @@ class _ProfileState extends State<Profile> {
                   padding: const EdgeInsets.only(top: 20),
                   child: Column(
                     children: [
-                      const Center(
-                        child: ClipOval(
-                            child: Image(
+                      Center(
+                        child: IconButton(
+                            icon: ClipOval(
+                              child: Image(
                                 width: 200,
-                                image: AssetImage('assets/avatar/sloth.jpg'))),
+                                image: AssetImage(avatarList[globals.avatarId]),
+                              ),
+                            ),
+                            onPressed: () async {
+                              var response = await http.post(Uri.parse(globals
+                                      .serverUrl +
+                                  "set_Avatar?user=${globals.userId}&avatar=${(globals.avatarId + 1) % 3}"));
+                              if (jsonDecode(response.body) == true) {
+                                setState(() {
+                                  globals.avatarId = (globals.avatarId + 1) % 3;
+                                });
+                              }
+                            }),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

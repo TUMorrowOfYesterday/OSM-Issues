@@ -35,7 +35,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   List<String> avatarList = [
     "assets/avatar/cat.png",
-    "assets/avatar/whale.png",
+    "assets/avatar/panda.png",
     "assets/avatar/pinguin.png"
   ];
 
