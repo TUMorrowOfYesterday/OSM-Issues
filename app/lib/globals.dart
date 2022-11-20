@@ -1,3 +1,3 @@
 library app.globals;
 
-String serverUrl = 'http://15e5ca3e4c95ea.lhr.life/';
+String serverUrl = 'http://a62f-138-246-3-9.eu.ngrok.io/';

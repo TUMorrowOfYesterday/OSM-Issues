@@ -167,7 +167,7 @@ class _HomepageState extends State<Homepage> {
     });
 
     // periodic updater
-    timer = Timer.periodic(Duration(seconds: 60), ((timer) => updateServer()));
+    timer = Timer.periodic(Duration(seconds: 5), ((timer) => updateServer()));
     super.initState();
   }
 
