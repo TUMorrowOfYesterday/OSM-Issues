@@ -183,12 +183,6 @@ class _HomepageState extends State<Homepage> {
           nonRotatedChildren: [
             AttributionWidget.defaultWidget(
               source: 'OpenStreetMap',
-              onSourceTapped: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return CameraExampleHome();
-                }));
-              },
             ),
             // UI OVERLAY BUTTONS ETC HERE
             // Expanded(
