@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import sqlite3
 import csv
+from model import torch, SingleImageDataset, HighwayClassifier, A
 
 #UPLOAD_FOLDER = './images'
 #ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -11,7 +12,9 @@ app = Flask(__name__)
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 con = sqlite3.connect("app.db", check_same_thread=False)
-
+model = HighwayClassifier().to('cuda')
+model.load_state_dict(torch.load('../training/weights/model_weights.pth'))
+model.eval()
 
 
 
@@ -68,7 +71,17 @@ def upload():
     
 
     # ML Model
-    res = "footway"
+    image_ds = SingleImageDataset('image.jpg', transform=A.Compose([
+        A.Resize(150, 150),
+        A.Normalize()
+    ]))
+    image = image_ds[0].to('cuda').unsqueeze(0)
+
+
+    with torch.no_grad():
+        pred = model(image)
+    
+    res = "primary" if pred.item() > 0.5 else "footway"
 
 
     cur = con.cursor()
