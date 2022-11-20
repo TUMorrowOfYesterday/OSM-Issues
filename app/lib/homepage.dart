@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/camera.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -100,7 +101,7 @@ class _HomepageState extends State<Homepage> {
   //update avatar
   //fetch others position
   void updateServer() async {
-    String serverUrl = "131.159.196.209:5000";
+    String serverUrl = "172.20.10.7:5000";
     var response =
         await http.get(Uri.parse("http://" + serverUrl + "/get_openIssues"));
     if (response.statusCode == 200)
@@ -144,7 +145,12 @@ class _HomepageState extends State<Homepage> {
           nonRotatedChildren: [
             AttributionWidget.defaultWidget(
               source: 'OpenStreetMap',
-              onSourceTapped: () {},
+              onSourceTapped: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return CameraExampleHome();
+                }));
+              },
             ),
             // UI OVERLAY BUTTONS ETC HERE
             // Expanded(
