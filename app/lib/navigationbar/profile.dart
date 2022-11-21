@@ -60,28 +60,29 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Center(
                         child: IconButton(
-                            splashRadius: 15.5,
-                            icon: Image(
-                              width: 200,
-                              image: AssetImage(avatarList[globals.avatarId]),
-                            ),
-                            // icon: ClipOval(
-                            //   child: Image(
-                            //     width: 200,
-                            //     image: AssetImage(avatarList[globals.avatarId]),
-                            //   ),
-                            // ),
-                            onPressed: () async {
-                              {
-                                setState(() {
-                                  globals.avatarId = (globals.avatarId + 1) % 3;
-                                });
-                              }
-                              var response = await http.post(Uri.parse(globals
-                                      .serverUrl +
-                                  "setAvatar?user=${globals.userId}&avatar=${(globals.avatarId)}"));
-                            },
-                            iconSize: 10.5),
+                          iconSize: 100,
+                          splashRadius: 15.5,
+                          icon: Image(
+                            width: 200,
+                            image: AssetImage(avatarList[globals.avatarId]),
+                          ),
+                          // icon: ClipOval(
+                          //   child: Image(
+                          //     width: 200,
+                          //     image: AssetImage(avatarList[globals.avatarId]),
+                          //   ),
+                          // ),
+                          onPressed: () async {
+                            {
+                              setState(() {
+                                globals.avatarId = (globals.avatarId + 1) % 3;
+                              });
+                            }
+                            var response = await http.post(Uri.parse(globals
+                                    .serverUrl +
+                                "setAvatar?user=${globals.userId}&avatar=${(globals.avatarId)}"));
+                          },
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

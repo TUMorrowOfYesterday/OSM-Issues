@@ -48,13 +48,14 @@ dependencies:
   
 
 dev_dependencies:
-  flutter_launcher_icons: "^0.11.0"
+  
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.11.0"
     
 
 flutter_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
   image_path: "assets/avatar/treasure-map.png"
   min_sdk_android: 21
