@@ -1,15 +1,7 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:app/camera.dart';
-import 'package:app/submitpage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
-
-import '../Provider/layoutprovider.dart';
 
 class CurrentChallegene extends StatefulWidget {
   const CurrentChallegene({super.key});
@@ -19,13 +11,12 @@ class CurrentChallegene extends StatefulWidget {
 }
 
 class _CurrentChallegeneState extends State<CurrentChallegene> {
-  @override
   // distance to goal
   double distance = 2;
   int count = 0;
 
   void setState(VoidCallback fn) {
-    // TODO: implement setState
+    // implement setState when distance reduce
     // distance = getdistancetoGoal
     super.setState(fn);
   }
@@ -133,7 +124,7 @@ class _CurrentChallegeneState extends State<CurrentChallegene> {
                     SizedBox(
                       height: 20,
                     ),
-                    // TODO if you are close than 3meter
+                    // if you are closer than 3 meters
                     if (distance < 3)
                       InkWell(
                         onTap: () {

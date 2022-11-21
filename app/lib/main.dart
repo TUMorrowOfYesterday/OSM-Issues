@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
                 // is not restarted.
                 primarySwatch: Colors.blue,
               ),
-              // TODO uid == null with shared preference
+              // uid == null with shared preference
               home: (prefsnap.data!.getString("uid") == null)
                   ? StartPage()
                   : (() {

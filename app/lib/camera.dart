@@ -289,14 +289,14 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 
   Widget _exposureModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      // TODO(darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
+      // (darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
       // ignore: deprecated_member_use
       primary: controller?.value.exposureMode == ExposureMode.auto
           ? Theme.of(context).primaryColor
           : Colors.white,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      // TODO(darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
+      // (darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
       // ignore: deprecated_member_use
       primary: controller?.value.exposureMode == ExposureMode.locked
           ? Theme.of(context).primaryColor
@@ -380,14 +380,14 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 
   Widget _focusModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      // TODO(darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
+      // (darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
       // ignore: deprecated_member_use
       primary: controller?.value.focusMode == FocusMode.auto
           ? Theme.of(context).primaryColor
           : Colors.white,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      // TODO(darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
+      // (darrenaustin): Migrate to new API once it lands in stable: https://github.com/flutter/flutter/issues/105724
       // ignore: deprecated_member_use
       primary: controller?.value.focusMode == FocusMode.locked
           ? Theme.of(context).primaryColor
@@ -717,5 +717,5 @@ class _MediaSizeClipper extends CustomClipper<Rect> {
 ///
 /// We use this so that APIs that have become non-nullable can still be used
 /// with `!` and `?` on the stable branch.
-// TODO(ianh): Remove this once we roll stable in late 2021.
+// (ianh): Remove this once we roll stable in late 2021.
 T? _ambiguate<T>(T? value) => value;

@@ -3,9 +3,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:app/Challenge/newchallenge.dart';
-import 'package:app/camera.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:flutter/material.dart';
 
@@ -15,15 +12,10 @@ import 'package:latlong2/latlong.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'dart:io' show Platform;
 
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'package:tuple/tuple.dart';
 import '../globals.dart' as globals;
-
-import '../Challenge/currentchallenge.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -202,7 +194,7 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     ensureLocationPermission().then((value) {
-      //TODO: check value for whether it was successful or not
+      //check value for whether it was successful or not
       positionStream = Geolocator.getPositionStream(
           locationSettings: LocationSettings(
         accuracy: LocationAccuracy.high,

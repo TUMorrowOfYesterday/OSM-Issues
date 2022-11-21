@@ -1,11 +1,5 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-import '../camera.dart';
 import '../globals.dart' as globals;
 
 class NewChallenge extends StatefulWidget {
@@ -53,7 +47,7 @@ class _NewChallengeState extends State<NewChallenge> {
                     SizedBox(
                       height: 20,
                     ),
-                    // TODO if you are close than 3meter
+                    // if distance is smalerthan 3 meters
                     if (distance < 3)
                       InkWell(
                         onTap: () {

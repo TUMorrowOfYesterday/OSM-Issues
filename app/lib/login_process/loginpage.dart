@@ -1,14 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:app/navigationbar/homepage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 import '../main.dart';
 import '../globals.dart' as globals;
@@ -26,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     SharedPreferences.getInstance().then((prefs) {

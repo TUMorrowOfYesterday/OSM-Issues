@@ -1,13 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:http/http.dart' as http;
-
-import '../Challenge/currentchallenge.dart';
-import 'homepage.dart';
-
 import '../globals.dart' as globals;
 
 // class BoardElements {
@@ -157,7 +152,6 @@ class _LeaderBoardState extends State<LeaderBoard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getLeaderboardList();
   }

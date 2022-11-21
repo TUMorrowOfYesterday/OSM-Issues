@@ -1,15 +1,9 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:app/Challenge/currentchallenge.dart';
-import 'package:app/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:provider/provider.dart';
+
 import '../globals.dart' as globals;
-import 'dart:async';
 import 'package:http/http.dart' as http;
 
 import '../Provider/layoutprovider.dart';
@@ -31,8 +25,6 @@ class _ProfileState extends State<Profile> {
   late LayoutProvider userProvider;
   @override
   Widget build(BuildContext context) {
-    var topBarHeight = LayoutProvider(context).topBarHeight;
-    var indentation = LayoutProvider(context).indentation;
     return Scaffold(
       body: SafeArea(
         child: Column(
