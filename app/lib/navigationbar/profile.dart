@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:app/Challenge/currentchallenge.dart';
+import 'package:app/navigationbar/SettingsUrl.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../globals.dart' as globals;
@@ -29,16 +31,31 @@ class _ProfileState extends State<Profile> {
       body: SafeArea(
         child: Column(
           children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   children: const [
-            //     Padding(
-            //       padding: EdgeInsets.only(top: 10),
-            //       child: Text('Profile'),
-            //     )
-            //   ],
-            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CustomRoute(
+                        destination: SettingsUrl(),
+                        darken: true,
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 22.0, top: 20),
+                    child: Icon(
+                      Icons.settings_rounded,
+                      //UnitedCustomIcons.person_connected,
+                      size: 25,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Expanded(
               child: SingleChildScrollView(
                 // Bounce Bounce
